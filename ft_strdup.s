@@ -6,15 +6,13 @@ extern	malloc
 section	.text
 
 ft_strdup:	
-			mov	rcx, rdi
-			push	rcx
+			mov	r8, rdi
 			call ft_strlen
 			inc	rax
 			mov	rdi, rax
 			call malloc wrt ..plt
-			pop	rcx
-			mov	rdi, rcx
-			mov	rsi, rax
+			mov	rsi, r8
+			mov	rdi, rax
 			call ft_strcpy
-			mov	rax, rsi
+			mov	rax, rdi
 			ret
