@@ -1,12 +1,16 @@
 global	ft_strlen
 section	.text
 
-ft_strlen:	xor	rax, rax
+ft_strlen:	
+			mov	rax, rdi
 			jmp	loop
 
-loop:		cmp byte[rdi + rax], 0
-			je	ret_val
+loop:
+			cmp byte [rax], 0
+			jz	ret_val
 			inc	rax
 			jmp	loop
 
-ret_val:	ret
+ret_val:
+			sub	rax, rdi
+			ret

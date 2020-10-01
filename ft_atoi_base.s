@@ -1,4 +1,5 @@
 global	ft_atoi_base
+extern	ft_strlen
 section	.text
 
 ft_atoi_base:
@@ -6,7 +7,8 @@ ft_atoi_base:
 
 check_base_init:
 				xor	r12, r12
-				xor	r14, r14
+				mov	r14, base
+				mov	byte [r14], 0
 				xor	r9, r9
 				jmp	check_base
 
@@ -27,18 +29,63 @@ alrd_set:
 next_base:
 				mov	BYTE [r14 + r9], r13b
 				mov	BYTE [r14 + r9 + 1], 0
-				inc	r12
 				xor	r9, r9
+				inc	r12
 				jmp	check_base
 
 base_end:
 				cmp r12, 1
 				jle	ret_zero
+				jmp	skip_spaces
+
+skip_spaces:
+				mov	r13, rdi
+				xor	r8, r8
+				jmp	loop_cmp_spc
+
+loop_cmp_spc:
+				cmp	byte [r13 + r8], ' '
+				jz	loop_inc
+				cmp	byte [r13 + r8], 0x0c
+				jz	loop_inc
+				cmp	byte [r13 + r8], 0x0a
+				jz	loop_inc
+				cmp	byte [r13 + r8], 0x0d
+				jz	loop_inc
+				cmp	byte [r13 + r8], 0x09
+				jz	loop_inc
+				cmp	byte [r13 + r8], 0x0b
+				jz	loop_inc
+				jmp	count_sign
+
+loop_inc:
+				inc	r8
+				jmp	loop_cmp_spc
+
+count_sign:
+				xor	r15, r15
+				jmp	loop_cmp_sign
+
+loop_cmp_sign:
+				cmp	byte [r13 + r8], '+'
+				jz	loop_inc_sign
+				cmp	byte [r13 + r8], '-'
+				jz	sign_inc
 				jmp	atoi_init
 
+loop_inc_sign:
+				inc	r8
+				jmp	loop_cmp_sign
+
+sign_inc:
+				inc	r15
+				jmp	loop_inc_sign
+
 atoi_init:
-				mov	r13, rdi
-				xor	r8, r8		;init counters and nbr
+				mov	rdi, r13
+				call	ft_strlen
+				cmp	rax, 0
+				jz	ret_zero
 				xor	r9, r9
 				xor	rax, rax
 				jmp	base_index
@@ -66,7 +113,24 @@ ret_zero:
 				ret
 
 ret_nbr:
+				cmp	r15, 0
+				jnz	calc_sign
 				ret
 
-section	.data
-.FORBIDDEN	db	"-+' '\f\n\r\t\v"
+calc_sign:
+				push	rax
+				mov	rax, r15
+				mov	r15, 2
+				div	r15
+				cmp	rdx, 1
+				je	ret_neg
+				pop	rax
+				ret
+
+ret_neg:
+				pop	rax
+				neg	rax
+				ret
+
+section .bss
+base:		resb	128

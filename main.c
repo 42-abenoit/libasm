@@ -6,7 +6,7 @@
 /*   By: abenoit <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/09/30 14:53:56 by abenoit           #+#    #+#             */
-/*   Updated: 2020/09/30 18:12:17 by abenoit          ###   ########.fr       */
+/*   Updated: 2020/10/01 16:26:10 by abenoit          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -113,7 +113,9 @@ static int	call_write(int *state)
 		if ((fd = open(tmp, O_WRONLY)) <= 0)
 		{
 			free(tmp);
-			printf("Invalid fd\n");
+			tmp = NULL;
+			perror(tmp);
+			free(tmp);
 			return (0);
 		}
 	}
@@ -183,7 +185,9 @@ static int	call_read(int *state)
 		if ((fd = open(tmp, O_RDONLY)) <= 0)
 		{
 			free(tmp);
-			printf("Invalid fd\n");
+			tmp = NULL;
+			perror(tmp);
+			free(tmp);
 			return (0);
 		}
 	}
@@ -338,12 +342,6 @@ static int	get_input(int *state)
 
 int	main(int ac, char **av)
 {
-	char	tab[128];
-	char	buff[128];
-	char	*str;
-	int		plop;
-	int		fd;
-	int		nbr;
 	int		state;
 	const t_func fsm[8] = {get_input, call_strlen, call_strcpy, call_strcmp, call_write, call_read, call_strdup, call_atoi_base};
 
@@ -351,7 +349,7 @@ int	main(int ac, char **av)
 	if (ac != 1)
 	{
 		printf("Error: argument\n");
-		return (1);
+		return (-1);
 	}
 	while (state != -1)
 	{

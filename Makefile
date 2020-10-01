@@ -6,7 +6,7 @@
 #    By: abenoit <marvin@42.fr>                     +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2020/09/23 18:47:34 by abenoit           #+#    #+#              #
-#    Updated: 2020/09/30 13:31:49 by abenoit          ###   ########.fr        #
+#    Updated: 2020/10/01 15:56:45 by abenoit          ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -24,6 +24,8 @@ C_SRC = $(wildcard *.c)
 
 C_OBJ = $(C_SRC:.c=.o)
 
+CFLAGS = -Wall -Werror -Wextra
+
 LIB_NAME = libasm.a
 
 INC_LIB = -lc -L ./ -lasm
@@ -36,7 +38,7 @@ $(LIB_NAME): $(S_OBJ)
 	ar -rc $(LIB_NAME) $(S_OBJ)
 
 $(BIN_NAME): $(C_OBJ) $(LIB_NAME)
-	$(CC) $(C_OBJ) -o $(BIN_NAME) $(INC_LIB)
+	$(CC) $(CFLAGS) $(C_OBJ) -o $(BIN_NAME) $(INC_LIB)
 
 %.o: %.s
 	$(CASM) $(64_FLAG) -s $< -o $@
