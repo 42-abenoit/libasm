@@ -16,6 +16,22 @@ check_base:
 				mov r13b, BYTE [rsi + r12]
 				cmp	r13b, 0
 				je	base_end
+				cmp	r13b, ' '
+				jz	ret_zero
+				cmp	r13b, 0x0c
+				jz	ret_zero
+				cmp	r13b, 0x0a
+				jz	ret_zero
+				cmp	r13b, 0x0d
+				jz	ret_zero
+				cmp	r13b, 0x09
+				jz	ret_zero
+				cmp	r13b, 0x0b
+				jz	ret_zero
+				cmp	r13b, '+'
+				jz	ret_zero
+				cmp	r13b, '-'
+				jz	ret_zero
 				jmp	alrd_set
 
 alrd_set:
