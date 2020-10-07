@@ -6,7 +6,7 @@
 /*   By: abenoit <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/09/30 14:53:56 by abenoit           #+#    #+#             */
-/*   Updated: 2020/10/01 16:26:10 by abenoit          ###   ########.fr       */
+/*   Updated: 2020/10/01 19:25:59 by abenoit          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -346,15 +346,28 @@ int	main(int ac, char **av)
 	const t_func fsm[8] = {get_input, call_strlen, call_strcpy, call_strcmp, call_write, call_read, call_strdup, call_atoi_base};
 
 	state = 0;
-	if (ac != 1)
+	if (ac < 1 || ac > 2)
 	{
 		printf("Error: argument\n");
 		return (-1);
 	}
-	while (state != -1)
+	if (ac == 2)
 	{
-		if (fsm[state](&state) < 0)
-			printf("Error: input\n");
+		if (ft_strcmp(av[1], "-i") == 0)
+		{
+			while (state != -1)
+			{
+				if (fsm[state](&state) < 0)
+					printf("Error: input\n");
+			}
+			return (0);
+		}
+		else
+		{
+			printf("Error: argument\n");
+			return (-1);
+		}
 	}
-	return (0);
+	else
+		return (full_test());
 }
