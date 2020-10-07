@@ -6,7 +6,7 @@
 /*   By: abenoit <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/10/01 19:26:25 by abenoit           #+#    #+#             */
-/*   Updated: 2020/10/01 20:27:51 by abenoit          ###   ########.fr       */
+/*   Updated: 2020/10/07 17:57:15 by abenoit          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,5 +41,5 @@ static int	test_strlen(void)
 
 int		full_test(void)
 {
-	//test_strlen();
+	int	a;
 }
