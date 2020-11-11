@@ -1,8 +1,8 @@
-global	ft_atoi_base
-extern	ft_strlen
+global	_ft_atoi_base
+extern	_ft_strlen
 section	.text
 
-ft_atoi_base:
+_ft_atoi_base:
 				jmp	check_base_init
 
 check_base_init:
@@ -99,7 +99,7 @@ sign_inc:
 
 atoi_init:
 				mov	rdi, r13
-				call	ft_strlen
+				call	_ft_strlen
 				cmp	rax, 0
 				jz	ret_zero
 				xor	r9, r9
