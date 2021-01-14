@@ -6,7 +6,7 @@
 /*   By: abenoit <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/10/01 19:26:25 by abenoit           #+#    #+#             */
-/*   Updated: 2021/01/14 17:12:07 by abenoit          ###   ########.fr       */
+/*   Updated: 2021/01/14 20:41:30 by abenoit          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -158,6 +158,72 @@ int	test_strcmp(char *str1, char *str2)
 	return (0);
 }
 
+#include <time.h>
+
+int	test_write(char *path, char *buff, int count)
+{
+	pid_t	pid;
+	int		ret;
+	int		fd;
+
+	if (ft_strcmp(path, "STDOUT") == 0 || ft_strcmp(path, "1") == 0)
+		fd = 1;
+	else if (ft_strcmp(path, "invalid fd") == 0)
+	{
+		srand(time(NULL));
+		fd = rand() % 253 + 2;
+	}
+	else
+	{
+		if ((fd = open(path, O_WRONLY)) < 0)
+		{
+			perror(path);
+			return (0);
+		}
+	}
+	pid = fork();
+	if (pid == 0)
+	{
+	  	ft_putstr("ft_write = ");
+	  	ret = ft_write(fd, buff, count);
+	  	ft_putstr("\t");
+	  	printf("return = %d\n", ret);
+		exit (0);
+	}
+	else
+	{
+		waitpid(pid, &ret, 0);
+		if (WIFSIGNALED(ret))
+		{
+			if (WTERMSIG(ret) == SIGSEGV)
+			{
+				ft_putstr("segfault\n");
+			}
+		}
+		pid = fork();
+		if (pid == 0)
+		{
+	  		ft_putstr("   write = ");
+	  		ret = write(fd, buff, count);
+	  		ft_putstr("\t");
+	  		printf("return = %d\n", ret);
+			exit (0);
+		}
+		else
+		{
+			waitpid(pid, &ret, 0);
+			if (WIFSIGNALED(ret))
+			{
+				if (WTERMSIG(ret) == SIGSEGV)
+				{
+					ft_putstr("segfault\n");
+				}
+			}
+		}
+	}
+	return (0);
+}
+
 int		full_test(void)
 {
 	test_strlen("");
@@ -183,6 +249,10 @@ int		full_test(void)
 	test_strcmp(NULL, NULL);
 
 	ft_putstr("\n");
-	
+
+	test_write("STDOUT", "HELLO WORLD", 11);
+	test_write("STDOUT", "HELLO WORLD", 0);
+	test_write("invalid fd", "HELLO WORLD", 11);
+
 	return (0);
 }
