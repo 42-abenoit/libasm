@@ -6,7 +6,7 @@
 /*   By: abenoit <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/09/30 14:53:56 by abenoit           #+#    #+#             */
-/*   Updated: 2021/01/14 12:26:55 by abenoit          ###   ########.fr       */
+/*   Updated: 2021/01/14 16:17:49 by abenoit          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -178,7 +178,7 @@ static int	call_write(int *state)
 		free(buff);
 		return (ret);
 	}
-	if ((count = ft_atoi(tmp)) <= 0)
+	if ((count = ft_atoi(tmp)) < 0)
 	{
 		printf("Invalid size\n");
 		free(buff);
@@ -217,20 +217,16 @@ static int	call_read(int *state)
 {
 	char	*tmp;
 	char	*buff;
+	pid_t	pid;
 	int		fd;
 	int		count;
 	int		ret;
 
 	ft_putstr("ft_read(int fd, char *buff, int count):\nfd = ");
-	if (rec_gnl(0, &tmp) < 0)
-		return (-1);
-	if (ft_strcmp(tmp, "exit") == 0)
-	{
-		free(tmp);
-		*state = 0;
-		return (0);
-	}
-	else if (ft_strcmp(tmp, "STDIN") == 0)
+	ret = get_str(state, &tmp);
+	if (ret != 1)
+		return (ret);
+	else if (ft_strcmp(tmp, "STDIN") == 0 || ft_strcmp(tmp, "0") == 0)
 		fd = 0;
 	else
 	{
@@ -245,15 +241,10 @@ static int	call_read(int *state)
 	}
 	free(tmp);
 	ft_putstr("buff_size = ");
-	if (rec_gnl(0, &tmp) < 0)
-		return (-1);
-	if (ft_strcmp(tmp, "exit") == 0)
-	{
-		free(tmp);
-		*state = 0;
-		return (0);
-	}
-	if ((count = ft_atoi(tmp)) <= 0)
+	ret = get_str(state, &tmp);
+	if (ret != 1)
+		return (ret);
+	if ((count = ft_atoi(tmp)) < 0)
 	{
 		printf("Invalid size\n");
 		free(tmp);
@@ -266,19 +257,10 @@ static int	call_read(int *state)
 		return (-1);
 	}
 	ft_putstr("count = ");
-	if (rec_gnl(0, &tmp) < 0)
-	{
-		free(buff);
-		return (-1);
-	}
-	if (ft_strcmp(tmp, "exit") == 0)
-	{
-		free(buff);
-		free(tmp);
-		*state = 0;
-		return (0);
-	}
-	if ((count = ft_atoi(tmp)) <= 0)
+	ret = get_str(state, &tmp);
+	if (ret != 1)
+		return (ret);
+	if ((count = ft_atoi(tmp)) < 0)
 	{
 		printf("Invalid size\n");
 		free(buff);
@@ -287,10 +269,26 @@ static int	call_read(int *state)
 	}
 	else
 	{
-		free (tmp);
-		ret = ft_read(fd, buff, count);
-		printf("buff = %s\n", buff);
-		printf("return = %d\n", ret);
+		pid = fork();
+		if (pid == 0)
+		{
+			free (tmp);
+			ret = ft_read(fd, buff, count);
+			printf("buff = %s\n", buff);
+			printf("return = %d\n", ret);
+			exit (0);
+		}
+		else
+		{
+			waitpid(pid, &ret, 0);
+			if (WIFSIGNALED(ret))
+			{
+				if (WTERMSIG(ret) == SIGSEGV)
+				{
+					ft_putstr("ft_read: segfault\n");
+				}
+			}
+		}
 	}
 	free(buff);
 	return (0);
@@ -300,23 +298,33 @@ static int	call_strdup(int *state)
 {
 	char	*str;
 	char	*cpy;
+	pid_t	pid;
+	int		ret;
 
 	ft_putstr("ft_strdup(char *str):\n*str = ");
-	if (rec_gnl(0, &str) < 0)
-		return (-1);
-	if (ft_strcmp(str, "exit") == 0)
-	{
-		free(str);
-		*state = 0;
-		return (0);
-	}
-	else
+	ret = get_str(state, &str);
+	if (ret != 1)
+		return (ret);
+	pid = fork();
+	if (pid == 0)
 	{
 		cpy = ft_strdup(str);
 		printf("return: *cpy = %s at adress %p\n", cpy, &cpy);
+		free(cpy);
+		exit (0);
+	}
+	else
+	{
+		waitpid(pid, &ret, 0);
+		if (WIFSIGNALED(ret))
+		{
+			if (WTERMSIG(ret) == SIGSEGV)
+			{
+	  			ft_putstr("ft_strdup: segfault\n");
+			}
+		}
 	}
 	free(str);
-	free(cpy);
 	return (0);
 }
 
@@ -325,30 +333,39 @@ static int	call_atoi_base(int *state)
 	char	*str;
 	char	*base;
 	int		nbr;
+	int		ret;
+	pid_t	pid;
 
 	ft_putstr("ft_atoi_base(char *str, char *base):\n*str = ");
-	if (rec_gnl(0, &str) < 0)
-		return (-1);
-	if (ft_strcmp(str, "exit") == 0)
-	{
-		free(str);
-		*state = 0;
-		return (0);
-	}
+	ret = get_str(state, &str);
+	if (ret != 1)
+		return (ret);
 	ft_putstr("*base = ");
-	if (rec_gnl(0, &base) < 0)
-		return (-1);
-	if (ft_strcmp(base, "exit") == 0)
+	ret = get_str(state, &base);
+	if (ret != 1)
 	{
 		free(str);
-		free(base);
-		*state = 0;
-		return (0);
+		return (ret);
 	}
-	else
+	pid = fork();
+	if (pid == 0)
 	{
 		nbr = ft_atoi_base(str, base);
 		printf("return: nbr =  %d\n", nbr);
+		free(str);
+		free(base);
+		exit (0);
+	}
+	else
+	{
+		waitpid(pid, &ret, 0);
+		if (WIFSIGNALED(ret))
+		{
+			if (WTERMSIG(ret) == SIGSEGV)
+			{
+	  			ft_putstr("ft_atoi_base: segfault\n");
+			}
+		}
 	}
 	free(str);
 	free(base);

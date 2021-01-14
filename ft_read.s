@@ -3,7 +3,8 @@ global	_ft_read
 extern	___error
 section	.text
 
-_ft_read:	mov	rax, 3
+_ft_read:
+			mov	rax, 0x2000003
 			syscall
 			cmp	rax, 0
 			jle	ret_error
