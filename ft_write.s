@@ -1,12 +1,13 @@
-global	_ft_read
 extern	___error
-section	.text
+global	_ft_write
 
-_ft_read:	mov	rax, 3
+section	.text
+_ft_write:
+			mov	rax, 0x2000004
 			syscall
 			cmp	rax, 0
 			jle	ret_error
-			ret
+   		ret
 
 ret_error:
 			neg	rax

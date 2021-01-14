@@ -9,11 +9,17 @@
 
 #define _XOPEN_SOURCE
 
+typedef int	(*t_func)(int *state);
+
 typedef struct	s__list
 {
 	struct s_list	*next;
 	void			*data;
 }				t_list;
+
+/*
+**	asm functions
+*/
 
 int		ft_strlen(char *str);
 int		ft_strcmp(char *s1, char *s2);
@@ -23,15 +29,26 @@ int		ft_read(int fd, char *buff, int	count);
 char	*ft_strdup(char *str);
 int		ft_atoi_base(char *str, char *base);
 
-int		rec_gnl(int fd, char **line);
+/*
+**	bonus asm functions
+*/
+
+void	ft_list_push_front(t_list **begin_list, void *data);
+
+/*
+**	util functions
+*/
 
 void	ft_putchar(char c);
 void	ft_putstr(char *str);
 int		ft_isset(char c, char *set);
 int		ft_atoi(char *str);
 
-void	ft_list_push_front(t_list **begin_list, void *data);
+
+/*
+**	test functions
+*/
+
+int		rec_gnl(int fd, char **line);
 
 int		full_test(void);
-
-typedef int	(*t_func)(int *state);

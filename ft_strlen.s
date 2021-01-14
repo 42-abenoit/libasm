@@ -1,3 +1,5 @@
+%ifdef os_mac
+
 global	_ft_strlen
 section	.text
 
@@ -14,3 +16,9 @@ loop:
 ret_val:
 			sub	rax, rdi
 			ret
+
+%endif
+
+%ifdef os_linux
+
+%endif
