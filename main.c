@@ -6,29 +6,11 @@
 /*   By: abenoit <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/09/30 14:53:56 by abenoit           #+#    #+#             */
-/*   Updated: 2021/01/15 16:59:49 by abenoit          ###   ########.fr       */
+/*   Updated: 2021/01/15 17:33:20 by abenoit          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "libasm.h"
-
-int			get_str(int *state, char **str)
-{
-	if (rec_gnl(0, str) < 0)
-		return (-1);
-	if (ft_strcmp(*str, "exit") == 0)
-	{
-		free(*str);
-		*state = 0;
-		return (0);
-	}
-	else if (ft_strcmp(*str, "null") == 0)
-	{
-		free(*str);
-		*str = NULL;
-	}
-	return (1);
-}
 
 static int	call_strlen(int *state)
 {
@@ -384,10 +366,11 @@ static int	get_input(int *state)
 				"5.read\n"
 				"6.strdup\n"
 				"7.atoi_base\n"
-				"8.exit\n"
+				"8.list test\n"
+				"9.exit\n"
 				"user: ");
 	rec_gnl(0, &line);
-	if (ft_strcmp(line, "exit") == 0 || ft_strcmp(line, "8") == 0)
+	if (ft_strcmp(line, "exit") == 0 || ft_strcmp(line, "9") == 0)
 		*state = -1;
 	else if (ft_strcmp(line, "strlen") == 0 || ft_strcmp(line, "1") == 0)
 		*state = 1;
@@ -403,6 +386,8 @@ static int	get_input(int *state)
 		*state = 6;
 	else if (ft_strcmp(line, "atoi_base") == 0 || ft_strcmp(line, "7") == 0)
 		*state = 7;
+	else if (ft_strcmp(line, "list test") == 0 || ft_strcmp(line, "8") == 0)
+		*state = 8;
 	else
 		return (-1);
 	free(line);
@@ -412,7 +397,7 @@ static int	get_input(int *state)
 int	main(int ac, char **av)
 {
 	int		state;
-	const t_func fsm[8] = {get_input, call_strlen, call_strcpy, call_strcmp, call_write, call_read, call_strdup, call_atoi_base};
+	const t_func fsm[] = {get_input, call_strlen, call_strcpy, call_strcmp, call_write, call_read, call_strdup, call_atoi_base, call_list_test};
 
 	state = 0;
 	if (ac < 1 || ac > 2)

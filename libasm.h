@@ -25,6 +25,8 @@ typedef struct	s_list
 
 typedef int	(*t_func)(int *state);
 
+typedef int	(*t_list_func)(int *state, t_list **lst);
+
 /*
 **	asm functions
 */
@@ -55,6 +57,7 @@ void	ft_putchar(char c);
 void	ft_putstr(char *str);
 int		ft_isset(char c, char *set);
 int		ft_atoi(char *str);
+int		get_str(int *state, char **str);
 
 
 /*
@@ -64,5 +67,17 @@ int		ft_atoi(char *str);
 int		rec_gnl(int fd, char **line);
 int		full_test(void);
 int		list_test(int size);
+int		call_list_test(int *state);
+
+/*
+**	list utils
+*/
+
+int		ft_int_comp(void *n1, void *n2);
+int		print_lst(t_list *first);
+int		*new_fixed_num(int val);
+t_list	*new_fixed_elem(int val);
+int		*new_rand_num(void);
+t_list	*new_rand_elem(void);
 
 #endif
