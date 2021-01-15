@@ -1,18 +1,26 @@
-global	ft_strdup
-extern	ft_strlen
-extern	ft_strcpy
-extern	malloc
+%ifdef os_mac
+
+global	_ft_strdup
+extern	_ft_strlen
+extern	_ft_strcpy
+extern	_malloc
 
 section	.text
 
-ft_strdup:	
+_ft_strdup:	
 			mov	r8, rdi
-			call ft_strlen
+			call _ft_strlen
 			inc	rax
 			mov	rdi, rax
-			call malloc wrt ..plt
+			call _malloc
 			mov	rsi, r8
 			mov	rdi, rax
-			call ft_strcpy
+			call _ft_strcpy
 			mov	rax, rdi
 			ret
+
+%endif
+
+%ifdef os_linux
+
+%endif

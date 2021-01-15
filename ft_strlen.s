@@ -1,7 +1,9 @@
-global	ft_strlen
+%ifdef os_mac
+
+global	_ft_strlen
 section	.text
 
-ft_strlen:	
+_ft_strlen:	
 			mov	rax, rdi
 			jmp	loop
 
@@ -14,3 +16,9 @@ loop:
 ret_val:
 			sub	rax, rdi
 			ret
+
+%endif
+
+%ifdef os_linux
+
+%endif

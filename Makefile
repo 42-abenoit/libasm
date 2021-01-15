@@ -6,12 +6,19 @@
 #    By: abenoit <marvin@42.fr>                     +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2020/09/23 18:47:34 by abenoit           #+#    #+#              #
-#    Updated: 2020/10/07 17:59:20 by abenoit          ###   ########.fr        #
+#    Updated: 2021/01/14 19:29:12 by abenoit          ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
-64_FLAG = -felf64
+OS = $(shell uname -s)
 
+ifeq ($(OS),Darwin)
+	OS_DEF = -D os_mac
+	64_FLAG = -fmacho64
+else
+	OS_DEF = -D os_linux
+	64_FLAG = -felf64
+endif
 CASM = nasm
 
 CC = gcc
@@ -41,7 +48,7 @@ $(BIN_NAME): $(C_OBJ) $(LIB_NAME)
 	$(CC) $(CFLAGS) $(C_OBJ) -o $(BIN_NAME) $(INC_LIB)
 
 %.o: %.s
-	$(CASM) $(64_FLAG) -s $< -o $@
+	$(CASM) $(64_FLAG) -s $< -o $@ $(OS_DEF)
 
 %.o: %.c
 	$(CC) -c $< -o $@
@@ -57,3 +64,4 @@ fclean: clean
 re: fclean all
 
 .PHONY: clean fclean re
+

@@ -6,86 +6,136 @@
 /*   By: abenoit <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/09/30 14:53:56 by abenoit           #+#    #+#             */
-/*   Updated: 2020/10/01 19:25:59 by abenoit          ###   ########.fr       */
+/*   Updated: 2021/01/14 16:17:49 by abenoit          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "libasm.h"
 
-static int	call_strlen(int *state)
+int			get_str(int *state, char **str)
 {
-	char	*str;
-
-	ft_putstr("ft_strlen(char *str):\n*str = ");
-	if (rec_gnl(0, &str) < 0)
+	if (rec_gnl(0, str) < 0)
 		return (-1);
-	if (ft_strcmp(str, "exit") == 0)
+	if (ft_strcmp(*str, "exit") == 0)
 	{
-		free(str);
+		free(*str);
 		*state = 0;
 		return (0);
 	}
-	else
+	else if (ft_strcmp(*str, "null") == 0)
+	{
+		free(*str);
+		*str = NULL;
+	}
+	return (1);
+}
+
+static int	call_strlen(int *state)
+{
+	char	*str;
+	pid_t	pid;
+	int		ret;
+
+	ft_putstr("ft_strlen(char *str):\n*str = ");
+	ret = get_str(state, &str);
+	if (ret != 1)
+		return (ret);
+	pid = fork();
+	if (pid == 0)
+	{
 		printf("return = %d\n", ft_strlen(str));
+		exit (0);
+	}
+	else
+	{
+		waitpid(pid, &ret, 0);
+		if (WIFSIGNALED(ret))
+		{
+			if (WTERMSIG(ret) == SIGSEGV)
+			{
+	  			ft_putstr("ft_strlen: segfault\n");
+			}
+		}
+	}
 	free(str);
 	return (0);
 }
 
 static int	call_strcpy(int *state)
 {
+	int		ret;
+	pid_t	pid;
 	char	*dest;
 	char	*src;
 
-	ft_putstr("ft_strcpy(char *dest, char *src):\n*dest = ");
-	if (rec_gnl(0, &dest) < 0)
-		return (-1);
-	if (ft_strcmp(dest, "exit") == 0)
-	{
-		free(dest);
-		*state = 0;
-		return (0);
-	}
+	ft_putstr("ft_strcpy(char *dest, char *src):\n");
+	ft_putstr("*dest = ");
+	ret = get_str(state, &dest);
+	if (ret != 1)
+		return (ret);
 	ft_putstr("*src = ");
-	if (rec_gnl(0, &src) < 0)
-		return (-1);
-	if (ft_strcmp(src, "exit") == 0)
+	ret = get_str(state, &src);
+	if (ret != 1)
 	{
 		free(dest);
-		free(src);
-		*state = 0;
-		return (0);
+		return (ret);
+	}
+	pid = fork();
+	if (pid == 0)
+	{
+		printf("return = %s\n", ft_strcpy(dest, src));
+		exit (0);
 	}
 	else
-		printf("return = %s\n", ft_strcpy(dest, src));
+	{
+		waitpid(pid, &ret, 0);
+		if (WIFSIGNALED(ret))
+		{
+			if (WTERMSIG(ret) == SIGSEGV)
+			{
+	  			ft_putstr("ft_strcpy: segfault\n");
+			}
+		}
+	}
 	return (0);
 }
 
 static int	call_strcmp(int *state)
 {
+	int		ret;
+	pid_t	pid;
 	char	*s1;
 	char	*s2;
 
-	ft_putstr("ft_strcmp(char *s1, char *s2):\n*s1 = ");
-	if (rec_gnl(0, &s1) < 0)
-		return (-1);
-	if (ft_strcmp(s1, "exit") == 0)
-	{
-		free(s1);
-		*state = 0;
-		return (0);
-	}
+	ft_putstr("ft_strcmp(char *s1, char *s2):\n");
+	ft_putstr("*s1 = ");
+	ret = get_str(state, &s1);
+	if (ret != 1)
+		return (ret);
 	ft_putstr("*s2 = ");
-	if (rec_gnl(0, &s2) < 0)
-		return (-1);
-	if (ft_strcmp(s2, "exit") == 0)
+	ret = get_str(state, &s2);
+	if (ret != 1)
 	{
 		free(s1);
-		free(s2);
-		*state = 0;
-		return (0);
+		return (ret);
+	}
+	pid = fork();
+	if (pid == 0)
+	{
+		printf("return = %d\n", ft_strcmp(s1, s2));
+		exit (0);
 	}
 	else
-		printf("return = %d\n", ft_strcmp(s1, s2));
+	{
+		waitpid(pid, &ret, 0);
+		if (WIFSIGNALED(ret))
+		{
+			if (WTERMSIG(ret) == SIGSEGV)
+			{
+	  			ft_putstr("ft_strcmp: segfault\n");
+			}
+		}
+	}
 	return (0);
 }
 
@@ -95,18 +145,14 @@ static int	call_write(int *state)
 	char	*buff;
 	int		fd;
 	int		count;
+	pid_t	pid;
 	int		ret;
 
 	ft_putstr("ft_write(int fd, char *buff, int count):\nfd = ");
-	if (rec_gnl(0, &tmp) < 0)
-		return (-1);
-	if (ft_strcmp(tmp, "exit") == 0)
-	{
-		free(tmp);
-		*state = 0;
-		return (0);
-	}
-	else if (ft_strcmp(tmp, "STDOUT") == 0)
+	ret = get_str(state, &tmp);
+	if (ret != 1)
+		return (ret);
+	if (ft_strcmp(tmp, "STDOUT") == 0 || ft_strcmp(tmp, "1") == 0)
 		fd = 1;
 	else
 	{
@@ -120,29 +166,19 @@ static int	call_write(int *state)
 		}
 	}
 	free(tmp);
+	tmp = NULL;
 	ft_putstr("buff = ");
-	if (rec_gnl(0, &buff) < 0)
-		return (-1);
-	if (ft_strcmp(buff, "exit") == 0)
-	{
-		free(buff);
-		*state = 0;
-		return (0);
-	}
+	ret = get_str(state, &buff);
+	if (ret != 1)
+		return (ret);
 	ft_putstr("count = ");
-	if (rec_gnl(0, &tmp) < 0)
+	ret = get_str(state, &tmp);
+	if (ret != 1)
 	{
 		free(buff);
-		return (-1);
+		return (ret);
 	}
-	if (ft_strcmp(tmp, "exit") == 0)
-	{
-		free(buff);
-		free(tmp);
-		*state = 0;
-		return (0);
-	}
-	if ((count = ft_atoi(tmp)) <= 0)
+	if ((count = ft_atoi(tmp)) < 0)
 	{
 		printf("Invalid size\n");
 		free(buff);
@@ -151,11 +187,27 @@ static int	call_write(int *state)
 	}
 	else
 	{
-		free (tmp);
-		ft_putstr("write: ");
-		ret = ft_write(fd, buff, count);
-		ft_putstr("\t");
-		printf("return = %d\n", ret);
+		pid = fork();
+		if (pid == 0)
+		{
+	  	free (tmp);
+	  	ft_putstr("write: ");
+	  	ret = ft_write(fd, buff, count);
+	  	ft_putstr("\t");
+	  	printf("return = %d\n", ret);
+	  	exit (0);
+		}
+		else
+		{
+			waitpid(pid, &ret, 0);
+			if (WIFSIGNALED(ret))
+			{
+				if (WTERMSIG(ret) == SIGSEGV)
+				{
+					ft_putstr("ft_write: segfault\n");
+				}
+			}
+		}
 	}
 	free(buff);
 	return (0);
@@ -165,20 +217,16 @@ static int	call_read(int *state)
 {
 	char	*tmp;
 	char	*buff;
+	pid_t	pid;
 	int		fd;
 	int		count;
 	int		ret;
 
 	ft_putstr("ft_read(int fd, char *buff, int count):\nfd = ");
-	if (rec_gnl(0, &tmp) < 0)
-		return (-1);
-	if (ft_strcmp(tmp, "exit") == 0)
-	{
-		free(tmp);
-		*state = 0;
-		return (0);
-	}
-	else if (ft_strcmp(tmp, "STDIN") == 0)
+	ret = get_str(state, &tmp);
+	if (ret != 1)
+		return (ret);
+	else if (ft_strcmp(tmp, "STDIN") == 0 || ft_strcmp(tmp, "0") == 0)
 		fd = 0;
 	else
 	{
@@ -193,15 +241,10 @@ static int	call_read(int *state)
 	}
 	free(tmp);
 	ft_putstr("buff_size = ");
-	if (rec_gnl(0, &tmp) < 0)
-		return (-1);
-	if (ft_strcmp(tmp, "exit") == 0)
-	{
-		free(tmp);
-		*state = 0;
-		return (0);
-	}
-	if ((count = ft_atoi(tmp)) <= 0)
+	ret = get_str(state, &tmp);
+	if (ret != 1)
+		return (ret);
+	if ((count = ft_atoi(tmp)) < 0)
 	{
 		printf("Invalid size\n");
 		free(tmp);
@@ -214,19 +257,10 @@ static int	call_read(int *state)
 		return (-1);
 	}
 	ft_putstr("count = ");
-	if (rec_gnl(0, &tmp) < 0)
-	{
-		free(buff);
-		return (-1);
-	}
-	if (ft_strcmp(tmp, "exit") == 0)
-	{
-		free(buff);
-		free(tmp);
-		*state = 0;
-		return (0);
-	}
-	if ((count = ft_atoi(tmp)) <= 0)
+	ret = get_str(state, &tmp);
+	if (ret != 1)
+		return (ret);
+	if ((count = ft_atoi(tmp)) < 0)
 	{
 		printf("Invalid size\n");
 		free(buff);
@@ -235,10 +269,26 @@ static int	call_read(int *state)
 	}
 	else
 	{
-		free (tmp);
-		ret = ft_read(fd, buff, count);
-		printf("buff = %s\n", buff);
-		printf("return = %d\n", ret);
+		pid = fork();
+		if (pid == 0)
+		{
+			free (tmp);
+			ret = ft_read(fd, buff, count);
+			printf("buff = %s\n", buff);
+			printf("return = %d\n", ret);
+			exit (0);
+		}
+		else
+		{
+			waitpid(pid, &ret, 0);
+			if (WIFSIGNALED(ret))
+			{
+				if (WTERMSIG(ret) == SIGSEGV)
+				{
+					ft_putstr("ft_read: segfault\n");
+				}
+			}
+		}
 	}
 	free(buff);
 	return (0);
@@ -248,23 +298,33 @@ static int	call_strdup(int *state)
 {
 	char	*str;
 	char	*cpy;
+	pid_t	pid;
+	int		ret;
 
 	ft_putstr("ft_strdup(char *str):\n*str = ");
-	if (rec_gnl(0, &str) < 0)
-		return (-1);
-	if (ft_strcmp(str, "exit") == 0)
-	{
-		free(str);
-		*state = 0;
-		return (0);
-	}
-	else
+	ret = get_str(state, &str);
+	if (ret != 1)
+		return (ret);
+	pid = fork();
+	if (pid == 0)
 	{
 		cpy = ft_strdup(str);
 		printf("return: *cpy = %s at adress %p\n", cpy, &cpy);
+		free(cpy);
+		exit (0);
+	}
+	else
+	{
+		waitpid(pid, &ret, 0);
+		if (WIFSIGNALED(ret))
+		{
+			if (WTERMSIG(ret) == SIGSEGV)
+			{
+	  			ft_putstr("ft_strdup: segfault\n");
+			}
+		}
 	}
 	free(str);
-	free(cpy);
 	return (0);
 }
 
@@ -273,30 +333,39 @@ static int	call_atoi_base(int *state)
 	char	*str;
 	char	*base;
 	int		nbr;
+	int		ret;
+	pid_t	pid;
 
 	ft_putstr("ft_atoi_base(char *str, char *base):\n*str = ");
-	if (rec_gnl(0, &str) < 0)
-		return (-1);
-	if (ft_strcmp(str, "exit") == 0)
-	{
-		free(str);
-		*state = 0;
-		return (0);
-	}
+	ret = get_str(state, &str);
+	if (ret != 1)
+		return (ret);
 	ft_putstr("*base = ");
-	if (rec_gnl(0, &base) < 0)
-		return (-1);
-	if (ft_strcmp(base, "exit") == 0)
+	ret = get_str(state, &base);
+	if (ret != 1)
 	{
 		free(str);
-		free(base);
-		*state = 0;
-		return (0);
+		return (ret);
 	}
-	else
+	pid = fork();
+	if (pid == 0)
 	{
 		nbr = ft_atoi_base(str, base);
 		printf("return: nbr =  %d\n", nbr);
+		free(str);
+		free(base);
+		exit (0);
+	}
+	else
+	{
+		waitpid(pid, &ret, 0);
+		if (WIFSIGNALED(ret))
+		{
+			if (WTERMSIG(ret) == SIGSEGV)
+			{
+	  			ft_putstr("ft_atoi_base: segfault\n");
+			}
+		}
 	}
 	free(str);
 	free(base);

@@ -1,0 +1,6 @@
+test_libasm
+*.swp
+*.swo
+*.o
+*.vim
+.DS_Store
