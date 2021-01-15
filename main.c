@@ -6,7 +6,7 @@
 /*   By: abenoit <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/09/30 14:53:56 by abenoit           #+#    #+#             */
-/*   Updated: 2021/01/15 15:37:03 by abenoit          ###   ########.fr       */
+/*   Updated: 2021/01/15 16:59:49 by abenoit          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -438,6 +438,5 @@ int	main(int ac, char **av)
 		}
 	}
 	else
-		return (list_test(4));
-	//	return (full_test());
+		return (full_test());
 }

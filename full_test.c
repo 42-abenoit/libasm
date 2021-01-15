@@ -6,7 +6,7 @@
 /*   By: abenoit <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/10/01 19:26:25 by abenoit           #+#    #+#             */
-/*   Updated: 2021/01/15 13:26:24 by abenoit          ###   ########.fr       */
+/*   Updated: 2021/01/15 16:59:46 by abenoit          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -431,5 +431,5 @@ int		full_test(void)
 	test_atoi_base("10", "0123456789abcdef");
 	test_atoi_base("7fffffff", "0123456789abcdef");
 
-	return (0);
+	return (list_test(4));
 }

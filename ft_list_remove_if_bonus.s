@@ -6,6 +6,13 @@ section	.text
 _ft_list_remove_if:
 	sub		rsp,	8
 	push	rbp
+	push	r15
+	push	r14
+	push	r13
+	push	r12
+	push	r11
+	push	r10
+	push	r9
 	mov		r15,	rdi		; begin_list
 	mov		r14,	rsi		; data_ref
 	mov		r13,	rdx		; cmp
@@ -41,10 +48,11 @@ switch_first:
 	mov		r9,	[r11 + 8]
 	push	r9
 	mov		rdi,	r11
-	call	_free
+	call	free
 	pop		r9
 	mov		[r15],	r9
-	jmp		end
+	mov		r11, [r15]
+	jmp		comp_first
 
 comp_else:
 	cmp		r9,	0
@@ -62,16 +70,19 @@ comp_else:
 
 switch_else:
 	push	r9
+	push	r11
 	mov		rdi,	[r9]
 	call	r12
+	pop		r11
 	pop		r9
 	mov		r10,	[r9 + 8]
 	mov		[r11 + 8],	r10
-	push	r9
+	sub		rsp, 8
 	mov		rdi,	r9
 	call	_free
-	pop		r9
-	jmp		end
+	add		rsp, 8
+	mov		r9, [r11 + 8]
+	jmp		comp_else
 
 next:
 	mov		r11, 	r9
@@ -83,9 +94,17 @@ end:
 	mov		rsi,	r14		; data_ref
 	mov		rdx,	r13		; cmp
 	mov		rcx,	r12		; free_fct
+	pop		r9
+	pop		r10
+	pop		r11
+	pop		r12
+	pop		r13
+	pop		r14
+	pop		r15
 	pop		rbp
 	add		rsp,	8
 	ret
+
 
 %endif
 
@@ -97,6 +116,13 @@ section	.text
 ft_list_remove_if:
 	sub		rsp,	8
 	push	rbp
+	push	r15
+	push	r14
+	push	r13
+	push	r12
+	push	r11
+	push	r10
+	push	r9
 	mov		r15,	rdi		; begin_list
 	mov		r14,	rsi		; data_ref
 	mov		r13,	rdx		; cmp
@@ -117,7 +143,7 @@ comp_first:
 	pop		r10
 	cmp		eax,	0		; while (cmp(tmp->content, data_ref) == 0
 	je		switch_first	; switch *begin_list
-	mov		r10,	[r11]	; tmp = *begin_list
+;	mov		r10,	[r11]	; tmp = *begin_list
 	mov		r11,	[r15]
 	mov		r9,	[r11 + 8]	; ptr = tmp->next
 	jmp		comp_else
@@ -135,7 +161,8 @@ switch_first:
 	call	free
 	pop		r9
 	mov		[r15],	r9
-	jmp		end
+	mov		r11, [r15]
+	jmp		comp_first
 
 comp_else:
 	cmp		r9,	0
@@ -153,16 +180,19 @@ comp_else:
 
 switch_else:
 	push	r9
+	push	r11
 	mov		rdi,	[r9]
 	call	r12
+	pop		r11
 	pop		r9
 	mov		r10,	[r9 + 8]
 	mov		[r11 + 8],	r10
-	push	r9
+	sub		rsp, 8
 	mov		rdi,	r9
 	call	free
-	pop		r9
-	jmp		end
+	add		rsp, 8
+	mov		r9, [r11 + 8]
+	jmp		comp_else
 
 next:
 	mov		r11, 	r9
@@ -174,6 +204,13 @@ end:
 	mov		rsi,	r14		; data_ref
 	mov		rdx,	r13		; cmp
 	mov		rcx,	r12		; free_fct
+	pop		r9
+	pop		r10
+	pop		r11
+	pop		r12
+	pop		r13
+	pop		r14
+	pop		r15
 	pop		rbp
 	add		rsp,	8
 	ret

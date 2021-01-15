@@ -43,6 +43,29 @@ int		print_lst(t_list *first)
 	return (0);
 }
 
+int		*new_fixed_num(int val)
+{
+	int		*new;
+
+	new = malloc(sizeof(int));
+	if (new == NULL)
+		return (NULL);
+	*new = val;
+	return (new);
+}
+
+t_list	*new_fixed_list(int val)
+{
+	t_list	*new;
+	int		*content;
+
+	content = new_fixed_num(val);
+	new = ft_lstnew(content);
+	if (new == NULL)
+		return (NULL);
+	return (new);
+}
+
 int		*new_rand_num(void)
 {
 	int		*new;
@@ -81,12 +104,19 @@ int		list_test(int size)
 		i++;
 	}
 	print_lst(lst);
+	remove = *((int*)(ft_lstlast(lst)->data));
 	ft_list_sort(&lst, ft_int_comp);
 	print_lst(lst);
-	remove = *((int*)(ft_lstlast(lst)->data));
+	i = 0;
+	while (i < size)
+	{
+		ft_lstadd_front(&lst, new_fixed_list(remove));
+		i++;
+	}
+	print_lst(lst);
 	ft_list_remove_if(&lst, &remove, ft_int_comp, free);
-//	print_lst(lst);
+	print_lst(lst);
+	ft_lstclear(&lst, free);
+	print_lst(lst);
 	return (0);
-//	ft_lstclear(&lst, free);
-//	printf("%d\n", ft_int_comp(lst->data, lst->next->data));
 }
