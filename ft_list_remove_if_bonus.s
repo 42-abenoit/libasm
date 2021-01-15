@@ -160,7 +160,7 @@ switch_else:
 	mov		[r11 + 8],	r10
 	push	r9
 	mov		rdi,	r9
-	call	_free
+	call	free
 	pop		r9
 	jmp		end
 

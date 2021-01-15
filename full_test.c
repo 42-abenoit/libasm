@@ -6,7 +6,7 @@
 /*   By: abenoit <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/10/01 19:26:25 by abenoit           #+#    #+#             */
-/*   Updated: 2021/01/14 20:41:30 by abenoit          ###   ########.fr       */
+/*   Updated: 2021/01/15 13:26:24 by abenoit          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -224,6 +224,157 @@ int	test_write(char *path, char *buff, int count)
 	return (0);
 }
 
+int	test_read(char *path, int buff_size, int count)
+{
+	pid_t	pid;
+	char	*buff;
+	int		ret;
+	int		fd;
+
+	if (ft_strcmp(path, "STDIN") == 0 || ft_strcmp(path, "0") == 0)
+		fd = 0;
+	else if (ft_strcmp(path, "invalid fd") == 0)
+	{
+		srand(time(NULL));
+		fd = rand() % 253 + 2;
+	}
+	else
+	{
+		if ((fd = open(path, O_RDONLY)) < 0)
+		{
+			perror(path);
+			return (0);
+		}
+	}
+	if (buff_size > 0)
+	{
+		buff = malloc(buff_size * sizeof(char));
+		if (buff == NULL)
+		{
+			if (fd != 0)
+				close(fd);
+			exit(0);
+		}
+	}
+	else
+		buff = NULL;
+	pid = fork();
+	if (pid == 0)
+	{
+	  	ft_putstr("ft_read = ");
+	  	ret = ft_read(fd, buff, count);
+		ft_putstr(buff);
+	  	ft_putstr("\t");
+	  	printf("return = %d\n", ret);
+		exit (0);
+	}
+	else
+	{
+		waitpid(pid, &ret, 0);
+		if (WIFSIGNALED(ret))
+		{
+			if (WTERMSIG(ret) == SIGSEGV)
+			{
+				ft_putstr("segfault\n");
+			}
+		}
+		pid = fork();
+		if (pid == 0)
+		{
+	  		ft_putstr("   read = ");
+	  		ret = read(fd, buff, count);
+			ft_putstr(buff);
+	  		ft_putstr("\t");
+	  		printf("return = %d\n", ret);
+			exit (0);
+		}
+		else
+		{
+			waitpid(pid, &ret, 0);
+			if (WIFSIGNALED(ret))
+			{
+				if (WTERMSIG(ret) == SIGSEGV)
+				{
+					ft_putstr("segfault\n");
+				}
+			}
+		}
+	}
+	return (0);
+}
+
+int	test_strdup(char *str)
+{
+	pid_t	pid;
+	int		ret;
+	char	*cpy;
+
+	pid = fork();
+	if (pid == 0)
+	{
+		cpy = ft_strdup(str);
+		printf("ft_strdup = %s\n", cpy);
+		exit (0);
+	}
+	else
+	{
+		waitpid(pid, &ret, 0);
+		if (WIFSIGNALED(ret))
+		{
+			if (WTERMSIG(ret) == SIGSEGV)
+			{
+	  			ft_putstr("ft_strdup = segfault\n");
+			}
+		}
+		pid = fork();
+		if (pid == 0)
+		{
+			cpy = strdup(str);
+			printf("   strdup = %s\n", cpy);
+			exit (0);
+		}
+		else
+		{
+			waitpid(pid, &ret, 0);
+			if (WIFSIGNALED(ret))
+			{
+				if (WTERMSIG(ret) == SIGSEGV)
+				{
+					ft_putstr("   strdup = segfault\n");
+				}
+			}
+		}
+	}
+	return (0);
+}
+
+int	test_atoi_base(char *str, char *base)
+{
+	pid_t	pid;
+	int		ret;
+	int		nbr;
+	
+	pid = fork();
+	if (pid == 0)
+	{
+		nbr = ft_atoi_base(str, base);
+		printf("ft_atoi_base = %d\n", nbr);
+		exit (0);
+	}
+	else
+	{
+		waitpid(pid, &ret, 0);
+		if (WIFSIGNALED(ret))
+		{
+			if (WTERMSIG(ret) == SIGSEGV)
+			{
+	  			ft_putstr("ft_atoi_base = segfault\n");
+			}
+		}
+	}
+	return (0);
+}
+
 int		full_test(void)
 {
 	test_strlen("");
@@ -253,6 +404,32 @@ int		full_test(void)
 	test_write("STDOUT", "HELLO WORLD", 11);
 	test_write("STDOUT", "HELLO WORLD", 0);
 	test_write("invalid fd", "HELLO WORLD", 11);
+
+	ft_putstr("\n");
+
+	test_read("main.c", 11, 11);
+	test_read("main.c", 5, 11);
+	test_read("main.c", 0, 11);
+	test_read("main.c", 0, 0);
+	test_read("invalid fd", 11, 11);
+
+	ft_putstr("\n");
+
+	test_strdup("");
+	test_strdup("HELLO WORLD");
+	test_strdup(NULL);
+
+	ft_putstr("\n");
+
+	test_atoi_base("0", "0123456789");
+	test_atoi_base("10", "0123456789");
+	test_atoi_base("-10", "0123456789");
+	test_atoi_base("2146473647", "0123456789");
+	test_atoi_base("-2146473648", "0123456789");
+	test_atoi_base("8", "0123456789abcdef");
+	test_atoi_base("a", "0123456789abcdef");
+	test_atoi_base("10", "0123456789abcdef");
+	test_atoi_base("7fffffff", "0123456789abcdef");
 
 	return (0);
 }

@@ -6,7 +6,7 @@
 #    By: abenoit <marvin@42.fr>                     +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2020/09/23 18:47:34 by abenoit           #+#    #+#              #
-#    Updated: 2021/01/14 19:29:12 by abenoit          ###   ########.fr        #
+#    Updated: 2021/01/15 12:55:22 by abenoit          ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -21,7 +21,7 @@ else
 endif
 CASM = nasm
 
-CC = gcc
+CC = clang
 
 S_SRC = $(wildcard *.s)
 
@@ -32,6 +32,10 @@ C_SRC = $(wildcard *.c)
 C_OBJ = $(C_SRC:.c=.o)
 
 CFLAGS = -Wall -Werror -Wextra
+
+ifeq ($(d), 1)
+	CFLAGS += -g -fsanitize=address
+endif
 
 LIB_NAME = libasm.a
 

@@ -35,6 +35,7 @@ global	ft_write
 
 section	.text
 ft_write:
+			push	r8
 			push	rsi
 			mov		rsi, 0x0
 			mov	rax, 0x05
@@ -45,15 +46,17 @@ ft_write:
 			mov	rax, 0x01
 			syscall
 			cmp	rax, 0
-			jle	_error
+			jl	ret_error
+			pop		r8
 			ret
 
-_error:
-			neg	rax
-			push	rax
+ret_error:
+			neg		rax
+			mov		r8, rax
 			call	__errno_location
-			pop		rax
-			mov	rax, -1
+			mov		[rax], r8
+			mov		rax, -1
+			pop		r8
 			ret
 
 %endif

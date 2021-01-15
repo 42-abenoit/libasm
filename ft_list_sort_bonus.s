@@ -76,7 +76,7 @@ ft_list_sort:
 	mov		r13,	[r15]
 	lea		r12,	[r13]
 	mov		rdi,	r12
-	call	_ft_list_size
+	call	ft_list_size
 	mov		rdx,	rax
 	mov		qword rbx,	0
 	jmp		compare
