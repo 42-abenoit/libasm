@@ -27,13 +27,17 @@ int		ft_write(int fd, char *str, int size);
 char	*ft_strcpy(char *dest, char *src);
 int		ft_read(int fd, char *buff, int	count);
 char	*ft_strdup(char *str);
-int		ft_atoi_base(char *str, char *base);
 
 /*
 **	bonus asm functions
 */
 
+int		ft_atoi_base(char *str, char *base);
 void	ft_list_push_front(t_list **begin_list, void *data);
+int		ft_list_size(t_list *begin_list);
+void	ft_list_sort(t_list **begin_list, int(*cmp)());
+void	ft_list_remove_if(t_list **begin_list, void *data_ref,
+		int (*cmp)(), void (*free_fct)(void*));
 
 /*
 **	util functions
@@ -50,5 +54,4 @@ int		ft_atoi(char *str);
 */
 
 int		rec_gnl(int fd, char **line);
-
 int		full_test(void);
