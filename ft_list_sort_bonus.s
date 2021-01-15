@@ -73,12 +73,13 @@ ft_list_sort:
 	push	rbp
 	mov		r15,	rdi
 	mov		r14,	rsi
-	mov		r13,	[r15]
-	lea		r12,	[r13]
+	mov		r12,	[r15]
+	push	r12
 	mov		rdi,	r12
 	call	ft_list_size
+	pop		r12
 	mov		rdx,	rax
-	mov		qword rbx,	0
+	mov		qword r13,	0
 	jmp		compare
 
 compare:
@@ -90,7 +91,15 @@ compare:
 	mov		r10,	[r11 + 8]
 	mov		rdi,	[r11]
 	mov		rsi,	[r10]
+	push	r11
+	push	r10
+	push	rdx
+	sub		rsp,	8
 	call	r14
+	add		rsp,	8
+	pop		rdx
+	pop		r10
+	pop		r11
 	cmp		eax,	0
 	jge		switch
 	mov		r12,	r10
@@ -105,10 +114,11 @@ switch:
 	jmp		compare
 
 check_end:
-	cmp		qword [rbx],	rdx
+	mov		rax,	r13
+	cmp		qword rax,	rdx
 	jz		end
-	inc		qword [rbx]
-	lea		r12,	[r13]
+	inc		qword r13
+	mov		r12,	[r15]
 	jmp		compare
 
 end:

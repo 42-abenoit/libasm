@@ -6,7 +6,7 @@
 /*   By: abenoit <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/11/11 15:44:21 by abenoit           #+#    #+#             */
-/*   Updated: 2020/10/07 16:23:15 by abenoit          ###   ########.fr       */
+/*   Updated: 2021/01/15 15:12:16 by abenoit          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,6 +17,6 @@ void	ft_lstdelone(t_list *lst, void (*del)(void *))
 {
 	if (del == NULL || lst == NULL)
 		return ;
-	del(lst->content);
+	del(lst->data);
 	free(lst);
 }

@@ -94,7 +94,7 @@ global	ft_list_remove_if
 extern	free
 section	.text
 
-_ft_list_remove_if:
+ft_list_remove_if:
 	sub		rsp,	8
 	push	rbp
 	mov		r15,	rdi		; begin_list
@@ -117,7 +117,7 @@ comp_first:
 	pop		r10
 	cmp		eax,	0		; while (cmp(tmp->content, data_ref) == 0
 	je		switch_first	; switch *begin_list
-;	mov		r10,	[r11]	; tmp = *begin_list
+	mov		r10,	[r11]	; tmp = *begin_list
 	mov		r11,	[r15]
 	mov		r9,	[r11 + 8]	; ptr = tmp->next
 	jmp		comp_else

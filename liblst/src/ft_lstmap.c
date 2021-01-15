@@ -6,7 +6,7 @@
 /*   By: abenoit <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/11/11 18:15:50 by abenoit           #+#    #+#             */
-/*   Updated: 2020/10/07 16:20:40 by abenoit          ###   ########.fr       */
+/*   Updated: 2021/01/15 15:12:34 by abenoit          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,7 +22,7 @@ t_list	*ft_lstmap(t_list *lst, void *(*f)(void *), void (*del)(void *))
 	begin = 0;
 	while (lst)
 	{
-		if (!(new = ft_lstnew((*f)(lst->content))))
+		if (!(new = ft_lstnew((*f)(lst->data))))
 		{
 			ft_lstclear(&begin, del);
 			return (NULL);

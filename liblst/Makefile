@@ -21,7 +21,7 @@ OBJ = $(addprefix $(OBJ_DIR)/,$(OBJ_NAME))
 
 INC = -I inc
 
-NAME	= liblst.a
+NAME = liblst.a
 
 LIB	= ar rc
 CC	= cc

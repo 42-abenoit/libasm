@@ -1,3 +1,6 @@
+#ifndef LIBASM_H
+# define LIBASM_H
+
 #include <stdio.h>
 #include <unistd.h>
 #include <fcntl.h>
@@ -9,13 +12,18 @@
 
 #define _XOPEN_SOURCE
 
-typedef int	(*t_func)(int *state);
+# ifndef T_LIST_FORMAT
+#  define T_LIST_FORMAT
 
-typedef struct	s__list
+typedef struct	s_list
 {
-	struct s_list	*next;
 	void			*data;
+	struct s_list	*next;
 }				t_list;
+
+# endif
+
+typedef int	(*t_func)(int *state);
 
 /*
 **	asm functions
@@ -55,3 +63,6 @@ int		ft_atoi(char *str);
 
 int		rec_gnl(int fd, char **line);
 int		full_test(void);
+int		list_test(int size);
+
+#endif
