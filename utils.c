@@ -6,7 +6,7 @@
 /*   By: abenoit <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/09/30 15:15:19 by abenoit           #+#    #+#             */
-/*   Updated: 2021/01/15 17:54:19 by abenoit          ###   ########.fr       */
+/*   Updated: 2021/01/16 18:10:14 by abenoit          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -77,4 +77,63 @@ int			get_str(int *state, char **str)
 		*str = NULL;
 	}
 	return (1);
+}
+
+int			get_num(int *state)
+{
+	char	*tmp;
+	int		count;
+
+	if (rec_gnl(0, &tmp) < 0)
+		return (-1);
+	if (ft_strcmp(tmp, "exit") == 0)
+	{
+		free(tmp);
+		*state = 0;
+		return (-1);
+	}
+	if ((count = ft_atoi(tmp)) < 0)
+	{
+		printf("Invalid size\n");
+		free(tmp);
+		return (-1);
+	}
+	free(tmp);
+	return (count);
+}
+
+int			get_fd(int *state, int mode)
+{
+	int		fd;
+	char	*tmp;
+	int		flags;
+
+	if (mode == 0)
+		flags = O_WRONLY;
+	else
+		flags = O_RDONLY;
+	if (rec_gnl(0, &tmp) < 0)
+		return (-1);
+	if (ft_strcmp(tmp, "exit") == 0)
+	{
+		free(tmp);
+		*state = 0;
+		return (-1);
+	}
+	if (ft_strcmp(tmp, "STDOUT") == 0 || ft_strcmp(tmp, "1") == 0)
+		return (1);
+	else if (ft_strcmp(tmp, "STDIN") == 0 || ft_strcmp(tmp, "0") == 0)
+		return (0);
+	else
+	{
+		if ((fd = open(tmp, flags)) <= 0)
+		{
+			free(tmp);
+			tmp = NULL;
+			perror(tmp);
+			free(tmp);
+			return (-1);
+		}
+	}
+	return (fd);
 }

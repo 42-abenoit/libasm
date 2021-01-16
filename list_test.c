@@ -29,7 +29,7 @@ int		list_test(int size)
 	print_lst(lst);
 	ft_list_remove_if(&lst, &remove, ft_int_comp, free);
 	print_lst(lst);
-	ft_lstclear(&lst, free);
-	print_lst(lst);
+	//ft_lstclear(&lst, free);
+	//print_lst(lst);
 	return (0);
 }

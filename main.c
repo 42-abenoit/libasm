@@ -6,7 +6,7 @@
 /*   By: abenoit <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/09/30 14:53:56 by abenoit           #+#    #+#             */
-/*   Updated: 2021/01/15 17:33:20 by abenoit          ###   ########.fr       */
+/*   Updated: 2021/01/16 18:16:24 by abenoit          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -123,7 +123,6 @@ static int	call_strcmp(int *state)
 
 static int	call_write(int *state)
 {
-	char	*tmp;
 	char	*buff;
 	int		fd;
 	int		count;
@@ -131,40 +130,18 @@ static int	call_write(int *state)
 	int		ret;
 
 	ft_putstr("ft_write(int fd, char *buff, int count):\nfd = ");
-	ret = get_str(state, &tmp);
-	if (ret != 1)
-		return (ret);
-	if (ft_strcmp(tmp, "STDOUT") == 0 || ft_strcmp(tmp, "1") == 0)
-		fd = 1;
-	else
-	{
-		if ((fd = open(tmp, O_WRONLY)) <= 0)
-		{
-			free(tmp);
-			tmp = NULL;
-			perror(tmp);
-			free(tmp);
-			return (0);
-		}
-	}
-	free(tmp);
-	tmp = NULL;
+	fd = get_fd(state, 0);
+	if (fd < 0)
+		return (0);
 	ft_putstr("buff = ");
 	ret = get_str(state, &buff);
 	if (ret != 1)
 		return (ret);
 	ft_putstr("count = ");
-	ret = get_str(state, &tmp);
-	if (ret != 1)
+	count = get_num(state);
+	if (count < 0)
 	{
 		free(buff);
-		return (ret);
-	}
-	if ((count = ft_atoi(tmp)) < 0)
-	{
-		printf("Invalid size\n");
-		free(buff);
-		free(tmp);
 		return (0);
 	}
 	else
@@ -172,7 +149,6 @@ static int	call_write(int *state)
 		pid = fork();
 		if (pid == 0)
 		{
-	  	free (tmp);
 	  	ft_putstr("write: ");
 	  	ret = ft_write(fd, buff, count);
 	  	ft_putstr("\t");
@@ -197,7 +173,6 @@ static int	call_write(int *state)
 
 static int	call_read(int *state)
 {
-	char	*tmp;
 	char	*buff;
 	pid_t	pid;
 	int		fd;
@@ -205,48 +180,23 @@ static int	call_read(int *state)
 	int		ret;
 
 	ft_putstr("ft_read(int fd, char *buff, int count):\nfd = ");
-	ret = get_str(state, &tmp);
-	if (ret != 1)
-		return (ret);
-	else if (ft_strcmp(tmp, "STDIN") == 0 || ft_strcmp(tmp, "0") == 0)
-		fd = 0;
-	else
-	{
-		if ((fd = open(tmp, O_RDONLY)) <= 0)
-		{
-			free(tmp);
-			tmp = NULL;
-			perror(tmp);
-			free(tmp);
-			return (0);
-		}
-	}
-	free(tmp);
-	ft_putstr("buff_size = ");
-	ret = get_str(state, &tmp);
-	if (ret != 1)
-		return (ret);
-	if ((count = ft_atoi(tmp)) < 0)
-	{
-		printf("Invalid size\n");
-		free(tmp);
+	fd = get_fd(state, 1);
+	if (fd < 0)
 		return (0);
-	}
+	ft_putstr("buff_size = ");
+	count = get_num(state);
+	if (count < 0)
+		return (0);
 	if (!(buff = malloc(count * sizeof(char))))
 	{
-		free(tmp);
 		printf("Malloc error\n");
 		return (-1);
 	}
 	ft_putstr("count = ");
-	ret = get_str(state, &tmp);
-	if (ret != 1)
-		return (ret);
-	if ((count = ft_atoi(tmp)) < 0)
+	count = get_num(state);
+	if (count < 0)
 	{
-		printf("Invalid size\n");
 		free(buff);
-		free(tmp);
 		return (0);
 	}
 	else
@@ -254,10 +204,9 @@ static int	call_read(int *state)
 		pid = fork();
 		if (pid == 0)
 		{
-			free (tmp);
 			ret = ft_read(fd, buff, count);
-			printf("buff = %s\n", buff);
-			printf("return = %d\n", ret);
+			ft_putstr(buff);
+			printf("\treturn = %d\n", ret);
 			exit (0);
 		}
 		else
@@ -273,6 +222,13 @@ static int	call_read(int *state)
 		}
 	}
 	free(buff);
+	if (fd == 0)
+	{
+		ret = rec_gnl(0, &buff);
+		if (ret < 0)
+			return (0);
+		free(buff);
+	}
 	return (0);
 }
 

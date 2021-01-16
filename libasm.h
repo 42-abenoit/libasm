@@ -58,6 +58,8 @@ void	ft_putstr(char *str);
 int		ft_isset(char c, char *set);
 int		ft_atoi(char *str);
 int		get_str(int *state, char **str);
+int		get_num(int *state);
+int		get_fd(int *state, int mode);
 
 
 /*

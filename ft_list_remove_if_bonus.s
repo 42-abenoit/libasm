@@ -4,7 +4,6 @@ extern	_free
 section	.text
 
 _ft_list_remove_if:
-	sub		rsp,	8
 	push	rbp
 	push	r15
 	push	r14
@@ -48,7 +47,7 @@ switch_first:
 	mov		r9,	[r11 + 8]
 	push	r9
 	mov		rdi,	r11
-	call	free
+	call	_free
 	pop		r9
 	mov		[r15],	r9
 	mov		r11, [r15]
@@ -77,10 +76,10 @@ switch_else:
 	pop		r9
 	mov		r10,	[r9 + 8]
 	mov		[r11 + 8],	r10
-	sub		rsp, 8
 	mov		rdi,	r9
+	push	r11
 	call	_free
-	add		rsp, 8
+	pop		r11
 	mov		r9, [r11 + 8]
 	jmp		comp_else
 
@@ -102,9 +101,7 @@ end:
 	pop		r14
 	pop		r15
 	pop		rbp
-	add		rsp,	8
 	ret
-
 
 %endif
 
@@ -187,10 +184,10 @@ switch_else:
 	pop		r9
 	mov		r10,	[r9 + 8]
 	mov		[r11 + 8],	r10
-	sub		rsp, 8
 	mov		rdi,	r9
+	push	r11
 	call	free
-	add		rsp, 8
+	pop		r11
 	mov		r9, [r11 + 8]
 	jmp		comp_else
 
