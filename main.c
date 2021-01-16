@@ -6,7 +6,7 @@
 /*   By: abenoit <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/09/30 14:53:56 by abenoit           #+#    #+#             */
-/*   Updated: 2021/01/16 18:16:24 by abenoit          ###   ########.fr       */
+/*   Updated: 2021/01/16 19:58:19 by abenoit          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -324,7 +324,7 @@ static int	get_input(int *state)
 				"7.atoi_base\n"
 				"8.list test\n"
 				"9.exit\n"
-				"user: ");
+				"$ ");
 	rec_gnl(0, &line);
 	if (ft_strcmp(line, "exit") == 0 || ft_strcmp(line, "9") == 0)
 		*state = -1;
@@ -356,6 +356,10 @@ int	main(int ac, char **av)
 	const t_func fsm[] = {get_input, call_strlen, call_strcpy, call_strcmp, call_write, call_read, call_strdup, call_atoi_base, call_list_test};
 
 	state = 0;
+	ft_putstr("-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-\n");
+	ft_putstr("-_-_-_-_-_-_-_-_-_LIBASM_TESTER_-_-_-_-_-_-_-_-_-\n");
+	ft_putstr("-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-\n");
+	ft_putstr("\n");
 	if (ac < 1 || ac > 2)
 	{
 		printf("Error: argument\n");

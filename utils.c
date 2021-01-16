@@ -6,7 +6,7 @@
 /*   By: abenoit <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/09/30 15:15:19 by abenoit           #+#    #+#             */
-/*   Updated: 2021/01/16 18:10:14 by abenoit          ###   ########.fr       */
+/*   Updated: 2021/01/16 20:19:17 by abenoit          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -65,7 +65,7 @@ int			get_str(int *state, char **str)
 {
 	if (rec_gnl(0, str) < 0)
 		return (-1);
-	if (ft_strcmp(*str, "exit") == 0)
+	if (ft_strcmp(*str, "exit") == 0 || ft_strcmp(*str, "..") == 0)
 	{
 		free(*str);
 		*state = 0;
@@ -86,7 +86,7 @@ int			get_num(int *state)
 
 	if (rec_gnl(0, &tmp) < 0)
 		return (-1);
-	if (ft_strcmp(tmp, "exit") == 0)
+	if (ft_strcmp(tmp, "exit") == 0 || ft_strcmp(tmp, "..") == 0)
 	{
 		free(tmp);
 		*state = 0;
@@ -114,7 +114,7 @@ int			get_fd(int *state, int mode)
 		flags = O_RDONLY;
 	if (rec_gnl(0, &tmp) < 0)
 		return (-1);
-	if (ft_strcmp(tmp, "exit") == 0)
+	if (ft_strcmp(tmp, "exit") == 0 || ft_strcmp(tmp, "..") == 0)
 	{
 		free(tmp);
 		*state = 0;

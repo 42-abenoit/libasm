@@ -19,26 +19,36 @@ int		print_lst(t_list *first)
 	int		*ptr;
 
 	lst = first;
-	printf("size = %d\n", ft_list_size(lst));
+	printf("\033[0;32m");
+	printf("\n");
+	printf("||||||||||||||||||||||||\n");
+	printf("|||||| PRINT_LIST ||||||\n");
+	printf("|||||| size = %3d ||||||\n", ft_list_size(lst));
+	printf("||||||||||||||||||||||||\n");
+	printf("|                      |\n");
 	while (lst != NULL)
 	{
 		ptr = lst->data;
-		printf("|================|\n");
-		printf("|%16p|\n", lst);
-		printf("|================|\n");
-		printf("|data = %6d|\n", *ptr);
-		printf("|    next        |\n");
-		printf("|_____||_________|\n");
-		printf("      ||          \n");
-		printf("      \\/          \n");
-		if (lst->next == NULL)
-		{
-			printf("|================|\n");
-			printf("|    NULL        |\n");
-			printf("|================|\n\n");
-		}
+		printf("|  |================|  |\n");
+		printf("|  |%16p|  |\n", lst);
+		printf("|  |================|  |\n");
+		printf("|  |   data = %3d   |  |\n", *ptr);
+		printf("|  |    next        |  |\n");
+		printf("|  |_____||_________|  |\n");
+		printf("|        ||            |\n");
+		printf("|        \\/            |\n");
 		lst = lst->next;
 	}
+	if (lst == NULL)
+	{
+		printf("|  |================|  |\n");
+		printf("|  |    NULL        |  |\n");
+		printf("|  |================|  |\n");
+	}
+	printf("|                      |\n");
+	printf("|______________________|\n");
+	printf("\n");
+	printf("\033[0m\n");
 	return (0);
 }
 
