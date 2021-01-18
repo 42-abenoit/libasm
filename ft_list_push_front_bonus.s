@@ -1,4 +1,3 @@
-
 %ifdef	os_mac
 
 global	_ft_list_push_front
@@ -24,7 +23,7 @@ _ft_list_push_front:
 	mov		r13, [r15]
 	mov		[rax + 8], r13
 	mov		[r15], rax
-	end
+	jmp		end
 
 end:
 	mov		rdi, r15
@@ -37,6 +36,7 @@ end:
 	ret
 
 %endif
+
 %ifdef os_linux
 
 global	ft_list_push_front
@@ -62,7 +62,7 @@ ft_list_push_front:
 	mov		r13, [r15]
 	mov		[rax + 8], r13
 	mov		[r15], rax
-	end
+	jmp		end
 
 end:
 	mov		rdi, r15

@@ -6,7 +6,7 @@
 /*   By: abenoit <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/10/01 19:26:25 by abenoit           #+#    #+#             */
-/*   Updated: 2021/01/15 16:59:46 by abenoit          ###   ########.fr       */
+/*   Updated: 2021/01/18 10:42:15 by abenoit          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -73,6 +73,8 @@ int	test_strcpy(char *s1, char *s2)
 	if (pid == 0)
 	{
 		printf("ft_strcpy = %s\n", strcpy(dest, src));
+		free(dest);
+		free(src);
 		exit (0);
 	}
 	else
@@ -89,6 +91,8 @@ int	test_strcpy(char *s1, char *s2)
 		if (pid == 0)
 		{
 			printf("   strcpy = %s\n", strcpy(dest, src));
+			free(dest);
+			free(src);
 			exit (0);
 		}
 		else
@@ -101,6 +105,8 @@ int	test_strcpy(char *s1, char *s2)
 					ft_putstr("   strcpy = segfault\n");
 				}
 			}
+			free(dest);
+			free(src);
 		}
 	}
 	return (0);
@@ -125,6 +131,8 @@ int	test_strcmp(char *str1, char *str2)
 	if (pid == 0)
 	{
 		printf("ft_strcmp = %d\n", strcmp(s1, s2));
+		free(s1);
+		free(s2);
 		exit (0);
 	}
 	else
@@ -141,6 +149,8 @@ int	test_strcmp(char *str1, char *str2)
 		if (pid == 0)
 		{
 			printf("   strcmp = %d\n", strcmp(s1, s2));
+			free(s1);
+			free(s2);
 			exit (0);
 		}
 		else
@@ -153,6 +163,8 @@ int	test_strcmp(char *str1, char *str2)
 					ft_putstr("   strcmp = segfault\n");
 				}
 			}
+			free(s1);
+			free(s2);
 		}
 	}
 	return (0);
@@ -266,6 +278,7 @@ int	test_read(char *path, int buff_size, int count)
 		ft_putstr(buff);
 	  	ft_putstr("\t");
 	  	printf("return = %d\n", ret);
+		free(buff);
 		exit (0);
 	}
 	else
@@ -286,6 +299,7 @@ int	test_read(char *path, int buff_size, int count)
 			ft_putstr(buff);
 	  		ft_putstr("\t");
 	  		printf("return = %d\n", ret);
+			free(buff);
 			exit (0);
 		}
 		else
@@ -298,6 +312,7 @@ int	test_read(char *path, int buff_size, int count)
 					ft_putstr("segfault\n");
 				}
 			}
+			free(buff);
 		}
 	}
 	return (0);
