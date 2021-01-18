@@ -18,6 +18,8 @@ _ft_strdup:
 			push	r8
 			call _malloc
 			pop		r8
+			cmp		rax, 0
+			jz		end
 			mov	rsi, r8
 			mov	rdi, rax
 			push	r8
@@ -25,6 +27,9 @@ _ft_strdup:
 			pop		r8
 			mov	rax, rdi
 			mov	rdi, r8
+			jmp	end
+
+end:
 			pop		r8
 			ret
 
@@ -50,6 +55,8 @@ ft_strdup:
 			push	r8
 			call malloc
 			pop		r8
+			cmp		rax, 0
+			jz		end
 			mov	rsi, r8
 			mov	rdi, rax
 			push	r8
@@ -57,6 +64,9 @@ ft_strdup:
 			pop		r8
 			mov	rax, rdi
 			mov	rdi, r8
+			jmp	end
+
+end:
 			pop		r8
 			ret
 
