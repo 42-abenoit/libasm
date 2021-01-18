@@ -1,5 +1,6 @@
 #include "lib_lst.h"
 #include "libasm.h"
+#include "libasm_bonus.h"
 #include <time.h>
 
 int		list_test(int size)

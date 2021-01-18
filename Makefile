@@ -6,7 +6,7 @@
 #    By: abenoit <marvin@42.fr>                     +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2020/09/23 18:47:34 by abenoit           #+#    #+#              #
-#    Updated: 2021/01/18 13:18:55 by abenoit          ###   ########.fr        #
+#    Updated: 2021/01/18 14:32:58 by abenoit          ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -44,7 +44,8 @@ C_SRC += utils.c
 C_SRC += rec_gnl.c
 C_SRC += full_test.c
 
-C_SRC_BONUS += list_tests.c
+C_SRC_BONUS += list_test.c
+C_SRC_BONUS += call_list_test.c
 C_SRC_BONUS += list_utils.c
 
 C_OBJ = $(C_SRC:.c=.o)
@@ -57,29 +58,36 @@ ifeq ($(d), 1)
 endif
 
 LIB_NAME = libasm.a
+LIB_NAME_BONUS = $(LIB_NAME:.a=_bonus.a)
 
 LIB_LST_DIR = liblst/
 
 INC = -I $(LIB_LST_DIR)inc
 
 INC_LIB += -lc -L ./ -lasm
-INC_LIB += -L$(LIB_LST_DIR) -llst
+INC_LIB_BONUS += -L$(LIB_LST_DIR) -llst
 
 BIN_NAME = test_libasm
+BIN_NAME_BONUS = $(LIB_NAME)_bonus
 
 RM = rm -f
 
 all: $(BIN_NAME)
 
 bonus: BONUS_DEF = -D bonus
-bonus: all
+bonus: clean $(BIN_NAME_BONUS)
 
-#ifeq ($(bonus),)
 $(LIB_NAME): $(S_OBJ)
 	ar -rc $(LIB_NAME) $(S_OBJ)
 
-$(BIN_NAME): $(C_OBJ) $(LIB_NAME) LIB_LST
+$(BIN_NAME): $(C_OBJ) $(LIB_NAME)
 	$(CC) $(CFLAGS) $(C_OBJ) -o $(BIN_NAME) $(INC) $(INC_LIB)
+
+$(LIB_NAME_BONUS): $(S_OBJ) $(S_OBJ_BONUS)
+	ar -rc $(LIB_NAME) $(S_OBJ) $(S_OBJ_BONUS)
+
+$(BIN_NAME_BONUS): $(C_OBJ) $(C_OBJ_BONUS) $(LIB_NAME_BONUS) LIB_LST
+	$(CC) $(CFLAGS) $(C_OBJ) $(C_OBJ_BONUS) -o $(BIN_NAME) $(INC) $(INC_LIB) $(INC_LIB_BONUS)
 
 %.o: %.s
 	$(CASM) $(64_FLAG) -s $< -o $@ $(OS_DEF)

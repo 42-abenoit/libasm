@@ -6,11 +6,14 @@
 /*   By: abenoit <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/09/30 14:53:56 by abenoit           #+#    #+#             */
-/*   Updated: 2021/01/18 12:42:20 by abenoit          ###   ########.fr       */
+/*   Updated: 2021/01/18 14:46:24 by abenoit          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "libasm.h"
+#ifdef bonus
+# include "libasm_bonus.h"
+#endif
 
 static int	call_strlen(int *state)
 {
@@ -131,7 +134,7 @@ static int	call_strcmp(int *state)
 	char	*s1;
 	char	*s2;
 
-	ft_putstr("ft_strcmp(char *s1, char *s2):\n");
+	ft_putstr("int\tft_strcmp(char *s1, char *s2):\n");
 	ft_putstr("*s1 = ");
 	ret = get_str(state, &s1);
 	if (ret != 1)
@@ -194,7 +197,7 @@ static int	call_write(int *state)
 	pid_t	pid;
 	int		ret;
 
-	ft_putstr("ft_write(int fd, char *buff, int count):\nfd = ");
+	ft_putstr("ssize_t\tft_write(int fd, char *buff, int count):\nfd = ");
 	fd = get_fd(state, 0);
 	if (fd < 0)
 		return (0);
@@ -270,7 +273,7 @@ static int	call_read(int *state)
 	int		count;
 	int		ret;
 
-	ft_putstr("ft_read(int fd, char *buff, int count):\nfd = ");
+	ft_putstr("ssize_t\tft_read(int fd, char *buff, int count):\nfd = ");
 	fd = get_fd(state, 1);
 	if (fd < 0)
 		return (0);
@@ -370,7 +373,7 @@ static int	call_strdup(int *state)
 	pid_t	pid;
 	int		ret;
 
-	ft_putstr("ft_strdup(char *str):\n*str = ");
+	ft_putstr("char\t*ft_strdup(char *str):\n*str = ");
 	ret = get_str(state, &str);
 	if (ret != 1)
 		return (ret);
@@ -427,7 +430,7 @@ static int	call_atoi_base(int *state)
 	int		ret;
 	pid_t	pid;
 
-	ft_putstr("ft_atoi_base(char *str, char *base):\n*str = ");
+	ft_putstr("int\tft_atoi_base(char *str, char *base):\n*str = ");
 	ret = get_str(state, &str);
 	if (ret != 1)
 		return (ret);

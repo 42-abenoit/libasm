@@ -1,5 +1,6 @@
 #include "lib_lst.h"
 #include "libasm.h"
+#include "libasm_bonus.h"
 
 int		ft_int_comp(void *n1, void *n2)
 {

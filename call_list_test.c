@@ -1,5 +1,6 @@
 #include "lib_lst.h"
 #include "libasm.h"
+#include "libasm_bonus.h"
 
 int	new_rand_list(int *state, t_list **lst)
 {

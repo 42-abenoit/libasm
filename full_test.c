@@ -6,11 +6,14 @@
 /*   By: abenoit <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/10/01 19:26:25 by abenoit           #+#    #+#             */
-/*   Updated: 2021/01/18 12:49:43 by abenoit          ###   ########.fr       */
+/*   Updated: 2021/01/18 14:46:34 by abenoit          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "libasm.h"
+#ifdef bonus
+# include "libasm_bonus.h"
+#endif
 
 int	test_strlen(char *str)
 {
