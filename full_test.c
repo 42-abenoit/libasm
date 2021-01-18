@@ -6,7 +6,7 @@
 /*   By: abenoit <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/10/01 19:26:25 by abenoit           #+#    #+#             */
-/*   Updated: 2021/01/18 10:42:15 by abenoit          ###   ########.fr       */
+/*   Updated: 2021/01/18 11:14:27 by abenoit          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -200,6 +200,8 @@ int	test_write(char *path, char *buff, int count)
 	  	ret = ft_write(fd, buff, count);
 	  	ft_putstr("\t");
 	  	printf("return = %d\n", ret);
+		if (ret < 0)
+			perror("Error: ft_write");
 		exit (0);
 	}
 	else
@@ -219,6 +221,8 @@ int	test_write(char *path, char *buff, int count)
 	  		ret = write(fd, buff, count);
 	  		ft_putstr("\t");
 	  		printf("return = %d\n", ret);
+			if (ret < 0)
+				perror("Error:    write");
 			exit (0);
 		}
 		else
@@ -278,6 +282,8 @@ int	test_read(char *path, int buff_size, int count)
 		ft_putstr(buff);
 	  	ft_putstr("\t");
 	  	printf("return = %d\n", ret);
+		if (ret < 0)
+			perror("Error: ft_read");
 		free(buff);
 		exit (0);
 	}
@@ -299,6 +305,8 @@ int	test_read(char *path, int buff_size, int count)
 			ft_putstr(buff);
 	  		ft_putstr("\t");
 	  		printf("return = %d\n", ret);
+			if (ret < 0)
+				perror("Error:    read");
 			free(buff);
 			exit (0);
 		}

@@ -3,7 +3,9 @@
 global	_ft_strcpy
 section	.text
 
-_ft_strcpy:	xor	rax, rax
+_ft_strcpy:
+			push	rcx
+			xor	rax, rax
 			jmp	check
 
 loop:		mov	cl, byte[rsi + rax]
@@ -17,6 +19,7 @@ check:		cmp	byte[rsi + rax], 0
 
 ret_zero:	mov	byte[rdi + rax], 0
 			mov	rax, rdi
+			pop	rcx
 			ret
 
 %endif
@@ -26,7 +29,9 @@ ret_zero:	mov	byte[rdi + rax], 0
 global	ft_strcpy
 section	.text
 
-ft_strcpy:	xor	rax, rax
+ft_strcpy:
+			push	rcx
+			xor	rax, rax
 			jmp	check
 
 loop:		mov	cl, byte[rsi + rax]
@@ -38,8 +43,10 @@ check:		cmp	byte[rsi + rax], 0
 			je	ret_zero
 			jmp	loop
 
-ret_zero:	mov	byte[rdi + rax], 0
+ret_zero:
+			mov	byte[rdi + rax], 0
 			mov	rax, rdi
+			pop		rcx
 			ret
 
 %endif

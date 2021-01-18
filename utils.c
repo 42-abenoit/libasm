@@ -6,7 +6,7 @@
 /*   By: abenoit <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/09/30 15:15:19 by abenoit           #+#    #+#             */
-/*   Updated: 2021/01/16 20:19:17 by abenoit          ###   ########.fr       */
+/*   Updated: 2021/01/18 11:25:01 by abenoit          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -121,9 +121,15 @@ int			get_fd(int *state, int mode)
 		return (-1);
 	}
 	if (ft_strcmp(tmp, "STDOUT") == 0 || ft_strcmp(tmp, "1") == 0)
+	{
+		free(tmp);
 		return (1);
+	}
 	else if (ft_strcmp(tmp, "STDIN") == 0 || ft_strcmp(tmp, "0") == 0)
+	{
+		free(tmp);
 		return (0);
+	}
 	else
 	{
 		if ((fd = open(tmp, flags)) <= 0)
