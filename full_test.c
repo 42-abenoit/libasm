@@ -6,7 +6,7 @@
 /*   By: abenoit <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/10/01 19:26:25 by abenoit           #+#    #+#             */
-/*   Updated: 2021/01/18 11:14:27 by abenoit          ###   ########.fr       */
+/*   Updated: 2021/01/18 12:49:43 by abenoit          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -371,6 +371,7 @@ int	test_strdup(char *str)
 	return (0);
 }
 
+#ifdef bonus
 int	test_atoi_base(char *str, char *base)
 {
 	pid_t	pid;
@@ -397,6 +398,30 @@ int	test_atoi_base(char *str, char *base)
 	}
 	return (0);
 }
+
+int	ft_bonus(void)
+{
+	test_atoi_base("0", "0123456789");
+	test_atoi_base("10", "0123456789");
+	test_atoi_base("-10", "0123456789");
+	test_atoi_base("2146473647", "0123456789");
+	test_atoi_base("-2146473648", "0123456789");
+	test_atoi_base("8", "0123456789abcdef");
+	test_atoi_base("a", "0123456789abcdef");
+	test_atoi_base("10", "0123456789abcdef");
+	test_atoi_base("7fffffff", "0123456789abcdef");
+
+	return (list_test(4));
+}
+
+#else
+int	ft_bonus(void)
+{
+	return (0);
+}
+#endif
+
+
 
 int		full_test(void)
 {
@@ -444,15 +469,5 @@ int		full_test(void)
 
 	ft_putstr("\n");
 
-	test_atoi_base("0", "0123456789");
-	test_atoi_base("10", "0123456789");
-	test_atoi_base("-10", "0123456789");
-	test_atoi_base("2146473647", "0123456789");
-	test_atoi_base("-2146473648", "0123456789");
-	test_atoi_base("8", "0123456789abcdef");
-	test_atoi_base("a", "0123456789abcdef");
-	test_atoi_base("10", "0123456789abcdef");
-	test_atoi_base("7fffffff", "0123456789abcdef");
-
-	return (list_test(4));
+	return ft_bonus();
 }

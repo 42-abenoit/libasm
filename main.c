@@ -6,7 +6,7 @@
 /*   By: abenoit <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/09/30 14:53:56 by abenoit           #+#    #+#             */
-/*   Updated: 2021/01/18 12:11:01 by abenoit          ###   ########.fr       */
+/*   Updated: 2021/01/18 12:42:20 by abenoit          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -417,6 +417,7 @@ static int	call_strdup(int *state)
 	}
 	return (0);
 }
+#ifdef	bonus
 
 static int	call_atoi_base(int *state)
 {
@@ -461,6 +462,7 @@ static int	call_atoi_base(int *state)
 	free(base);
 	return (0);
 }
+
 
 static int	get_input(int *state)
 {
@@ -537,3 +539,77 @@ int	main(int ac, char **av)
 	else
 		return (full_test());
 }
+
+#else
+
+static int	get_input(int *state)
+{
+	char	*line;
+
+	ft_putstr("Enter name or number of tested funtion:\n"
+				"1.strlen\n"
+				"2.strcpy\n"
+				"3.strcmp\n"
+				"4.write\n"
+				"5.read\n"
+				"6.strdup\n"
+				"7.exit\n"
+				"$ ");
+	rec_gnl(0, &line);
+	if (ft_strcmp(line, "exit") == 0 || ft_strcmp(line, "7") == 0)
+		*state = -1;
+	else if (ft_strcmp(line, "strlen") == 0 || ft_strcmp(line, "1") == 0)
+		*state = 1;
+	else if (ft_strcmp(line, "strcpy") == 0 || ft_strcmp(line, "2") == 0)
+		*state = 2;
+	else if (ft_strcmp(line, "strcmp") == 0 || ft_strcmp(line, "3") == 0)
+		*state = 3;
+	else if (ft_strcmp(line, "write") == 0 || ft_strcmp(line, "4") == 0)
+		*state = 4;
+	else if (ft_strcmp(line, "read") == 0 || ft_strcmp(line, "5") == 0)
+		*state = 5;
+	else if (ft_strcmp(line, "strdup") == 0 || ft_strcmp(line, "6") == 0)
+		*state = 6;
+	else
+		return (-1);
+	free(line);
+	return (0);
+}
+
+int	main(int ac, char **av)
+{
+	int		state;
+	const t_func fsm[] = {get_input, call_strlen, call_strcpy, call_strcmp, call_write, call_read, call_strdup};
+
+	state = 0;
+	ft_putstr("-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-\n");
+	ft_putstr("-_-_-_-_-_-_-_-_-_LIBASM_TESTER_-_-_-_-_-_-_-_-_-\n");
+	ft_putstr("-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-\n");
+	ft_putstr("\n");
+	if (ac < 1 || ac > 2)
+	{
+		printf("Error: argument\n");
+		return (-1);
+	}
+	if (ac == 2)
+	{
+		if (ft_strcmp(av[1], "-i") == 0)
+		{
+			while (state != -1)
+			{
+				if (fsm[state](&state) < 0)
+					printf("Error: input\n");
+			}
+			return (0);
+		}
+		else
+		{
+			printf("Error: argument\n");
+			return (-1);
+		}
+	}
+	else
+		return (full_test());
+}
+
+#endif
